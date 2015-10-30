@@ -34,6 +34,8 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
+import org.apache.velocity.exception.ParseErrorException;
+import org.apache.velocity.exception.ResourceNotFoundException;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -76,7 +78,11 @@ public class VelocityTemplateEngine extends BaseTemplateEngine {
                 // try to load, and if it works, stop at the first one
                 template = velocityEngine.getTemplate(templateName);
                 break;
-            } catch (IOException e) {
+            } catch (ResourceNotFoundException e) {
+                if (exception == null) {
+                    exception = e;
+                }
+            } catch (ParseErrorException e) {
                 if (exception == null) {
                     exception = e;
                 }
